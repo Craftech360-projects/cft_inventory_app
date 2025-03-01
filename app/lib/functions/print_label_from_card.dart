@@ -1,28 +1,27 @@
 import 'dart:developer';
 import 'dart:ui' as ui;
 
-import 'package:app/ui/custom_label.dart';
+import 'package:app/ui/custom_label_for_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
 
-Future<void> printLabel(String qrData, String inventoryCode,
-    String? description1, String? description2, String? description3) async {
+Future<void> printLabelFromCard(
+    Map<String, String> item, BuildContext context) async {
   try {
-    bool isConnected = false;
-    try {
-      isConnected = await SunmiPrinter.bindingPrinter() ?? false;
-    } catch (e) {
-      log('Failed to bind printer: $e');
-    }
-
+    bool isConnected = await SunmiPrinter.bindingPrinter() ?? false;
     if (!isConnected) {
       throw Exception('Printer not connected');
     }
 
-    // Generate the label image
-    final image = await generateLabelImage(qrData, inventoryCode,
-        description1 ?? '', description2 ?? '', description3 ?? '');
+    final image = await generateLabelImage(
+        item['sku'] ?? '',
+        item['product_name'] ?? '',
+        item['category'] ?? '',
+        item['sub_category'] ?? '',
+        item['description'] ?? ''
+        // item['description4'] ?? '',
+        );
 
     // Convert the image to bytes
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -33,17 +32,43 @@ Future<void> printLabel(String qrData, String inventoryCode,
     await SunmiPrinter.printImage(imageData);
     await SunmiPrinter.lineWrap(2);
     await SunmiPrinter.exitTransactionPrint(true);
-  } catch (e) {
+
+    // ✅ Show Snackbar Instead of Voice Notification
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Printing Completed ✅"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  } on Exception catch (e) {
     log('Error printing: $e');
-    rethrow;
+
+    // ✅ Show Snackbar on Error
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 }
 
-Future<ui.Image> generateLabelImage(String qrData, String inventoryCode,
-    String? description1, String? description2, String? description3) async {
+Future<ui.Image> generateLabelImage(
+  String sku,
+  String productName,
+  String category,
+  String subCategory,
+  String description,
+) async {
   // Generate QR code image
   final qrPainter = QrPainter(
-    data: qrData,
+    data: sku, // Use SKU as QR data
     version: QrVersions.auto,
     gapless: true,
     eyeStyle: const QrEyeStyle(
@@ -63,15 +88,15 @@ Future<ui.Image> generateLabelImage(String qrData, String inventoryCode,
   final qrImage = await qrPainter.toImageData(maxQrSize);
   final qrBitmap = await decodeImageFromList(qrImage!.buffer.asUint8List());
 
-  // Create the custom label painter
-  final painter = CustomLabelPainter(
+  // Create the custom label painter with updated parameters
+  final painter = CustomLabelPainterCard(
     qrImage: qrBitmap,
-    inventoryCode: inventoryCode,
-    description1: description1,
-    description2: description2,
-    description3: description3,
+    sku: sku, // Pass SKU directly
+    productName: productName,
+    description: description,
   );
-// Dimensions of the label (50mm x 30mm)
+
+  // Dimensions of the label (50mm x 30mm)
   const double labelWidth = 600; // Approximate pixels for 50mm
   return await painter.toImage(labelWidth, labelHeight);
 }

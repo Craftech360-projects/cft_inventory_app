@@ -2,44 +2,45 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-class CustomLabelPainter extends CustomPainter {
-  final ui.Image qrImage; // Pre-generated QR code image
-  final String inventoryCode;
+class CustomLabelPainterInputs extends CustomPainter {
+  final ui.Image qrImage;
+  final String product;
   final String? description1;
   final String? description2;
   final String? description3;
+  final String? description4;
 
-  CustomLabelPainter({
+  CustomLabelPainterInputs({
     required this.qrImage,
-    required this.inventoryCode,
+    required this.product,
     this.description1,
     this.description2,
     this.description3,
+    this.description4,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw white background
     final Paint backgroundPaint = Paint()..color = Colors.white;
     canvas.drawRect(
         Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
 
-    // Draw QR Code
     canvas.drawImage(
       qrImage,
-      Offset(20, 0),
+      Offset(10, 0),
       Paint(),
     );
 
     // Draw Inventory Code and Description
     final textStyle = TextStyle(
-      fontSize: 22, // Slightly bigger for better visibility
-      fontWeight: FontWeight.w900, // Maximum boldness
+      fontSize: 20,
+      fontWeight: FontWeight.w900,
       color: Colors.black,
     );
 
     final textSpan = TextSpan(
-        text: '$inventoryCode\n$description1\n$description2\n$description3',
+        text:
+            '$product\n$description1\n$description2\n$description3\n$description4',
         style: textStyle);
 
     final textPainter = TextPainter(
@@ -51,24 +52,11 @@ class CustomLabelPainter extends CustomPainter {
     textPainter.layout(maxWidth: size.width / 2);
 
     final textOffset = Offset(qrImage.width + 30, 0);
-
-    // final textOffset =
-    //     Offset(qrImage.width + 10, (size.height - textPainter.height) / 2);
-
-    // final textOffset =
-    //     Offset(size.width * 0.35, (size.height - textPainter.height) / 2);
-
-    // final textOffset =
-    //     Offset(size.width * 0.35, (size.height - textPainter.height) / 2);
-
-    // final textOffset =
-    //     Offset(size.width / 2, (size.height - textPainter.height) / 2);
-
     textPainter.paint(canvas, textOffset);
   }
 
   @override
-  bool shouldRepaint(CustomLabelPainter oldDelegate) => false;
+  bool shouldRepaint(CustomLabelPainterInputs oldDelegate) => false;
 
   Future<ui.Image> toImage(double width, double height) async {
     final recorder = ui.PictureRecorder();
