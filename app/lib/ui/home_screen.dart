@@ -332,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 100,
+                        width: 120,
                         child: TextField(
                           maxLength: 2,
                           keyboardType: TextInputType.number,
@@ -349,9 +349,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           controller: TextEditingController(text: '50'),
                         ),
                       ),
-                      SizedBox(width: 10),
                       SizedBox(
-                        width: 100,
+                        width: 120,
                         child: TextField(
                           maxLength: 2,
                           keyboardType: TextInputType.number,
@@ -370,37 +369,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20),
                   TextField(
                     maxLength: 20,
                     controller: _inventoryCodeController,
                     decoration: InputDecoration(labelText: 'Inventory Code'),
                   ),
                   TextField(
-                    maxLength: 20,
+                    maxLength: 22,
                     controller: _productController,
-                    decoration: InputDecoration(labelText: 'Product'),
+                    decoration:
+                        InputDecoration(labelText: 'Product and Processor'),
                   ),
                   TextField(
-                    maxLength: 18,
+                    maxLength: 20,
                     controller: _description1Controller,
-                    decoration: InputDecoration(labelText: 'Description 1'),
+                    decoration:
+                        InputDecoration(labelText: 'RAM/SSD - Graphics Card'),
                   ),
                   TextField(
-                    maxLength: 18,
+                    maxLength: 20,
                     controller: _description2Controller,
-                    decoration: InputDecoration(labelText: 'Description 2'),
+                    decoration: InputDecoration(labelText: 'Serial Number'),
                   ),
                   TextField(
-                    maxLength: 18,
+                    maxLength: 20,
                     controller: _description3Controller,
-                    decoration: InputDecoration(labelText: 'Description 3'),
+                    decoration: InputDecoration(labelText: 'Purpose - User'),
                   ),
                   TextField(
-                    maxLength: 18,
+                    maxLength: 20,
                     controller: _description4Controller,
-                    decoration: InputDecoration(labelText: 'Description 4'),
+                    decoration: InputDecoration(labelText: 'Additional Info'),
                   ),
-                  SizedBox(height: 20),
                   _isLoading
                       ? CircularProgressIndicator()
                       : ElevatedButton(

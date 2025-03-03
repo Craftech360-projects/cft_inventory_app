@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 
 class CustomLabelPainterInputs extends CustomPainter {
   final ui.Image qrImage;
+  final String inventoryCode;
   final String product;
-  final String? description1;
-  final String? description2;
-  final String? description3;
-  final String? description4;
+  final String? ramAndGraphics;
+  final String? serialNumber;
+  final String? purposeAndUser;
+  final String? additionalInfo;
 
   CustomLabelPainterInputs({
     required this.qrImage,
     required this.product,
-    this.description1,
-    this.description2,
-    this.description3,
-    this.description4,
+    required this.inventoryCode,
+    required this.ramAndGraphics,
+    required this.serialNumber,
+    required this.purposeAndUser,
+    required this.additionalInfo,
   });
 
   @override
@@ -40,7 +42,7 @@ class CustomLabelPainterInputs extends CustomPainter {
 
     final textSpan = TextSpan(
         text:
-            '$product\n$description1\n$description2\n$description3\n$description4',
+            '$inventoryCode\n$product\n${ramAndGraphics ?? ''}\n${serialNumber ?? ''}\n${purposeAndUser ?? ''}\n${additionalInfo ?? ''}',
         style: textStyle);
 
     final textPainter = TextPainter(

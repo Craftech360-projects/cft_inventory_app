@@ -74,10 +74,10 @@ Future<void> printLabelFromInputs(
 Future<ui.Image> generateLabelImage(
   String inventoryCode,
   String product,
-  String? description1,
-  String? description2,
-  String? description3,
-  String? description4,
+  String? ramAndGraphics,
+  String? serialNumber,
+  String? purposeAndUser,
+  String? additionalInfo,
 ) async {
   // Generate QR code image
 
@@ -104,11 +104,12 @@ Future<ui.Image> generateLabelImage(
   // Create the custom label painter
   final painter = CustomLabelPainterInputs(
       qrImage: qrBitmap,
+      inventoryCode: inventoryCode,
       product: product,
-      description1: description1,
-      description2: description2,
-      description3: description3,
-      description4: description4,
+      ramAndGraphics: ramAndGraphics,
+      serialNumber: serialNumber,
+      purposeAndUser: purposeAndUser,
+      additionalInfo: additionalInfo,
       );
 
   const double labelWidth = 600;
